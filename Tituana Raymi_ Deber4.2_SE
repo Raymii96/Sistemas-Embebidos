@@ -1,0 +1,62 @@
+#include <MsTimer2.h>        //Librera Timer 2
+#include<TimerOne.h>// libreria para el reloj
+const int leds[6]={13,12,11,10,9,8};
+ int on=0;        //int0
+ int cont;        //int1
+ int i;           //Variable de conteo 
+ int j=0;         //Variable de conteo
+void setup() {
+  for(i=0;i<6;i++){             //Configuracion de leds
+    pinMode(leds[i],OUTPUT);
+  }
+  i=0;
+  Serial.begin(9600);                 //Activacion de la comunicacion serial 
+  attachInterrupt(0,activacion,LOW);  //Interrupt 0 habilitada
+  attachInterrupt(1,contador,LOW);    //Interrupt 1 habilitada
+}
+
+void loop() {
+  if(on==2){
+    for(;i<cont;i++){
+      for(j=0;j<6;j++){
+        digitalWrite(leds[j],HIGH);
+        delay(200);
+        digitalWrite(leds[j],LOW);
+        delay(200);
+      }
+    }
+  }
+}
+
+void activacion(){
+  switch(on){                    //Opciones de los botones
+    case 0:
+      Serial.println("Inicio del Sistema");
+      Serial.println("Ingrese el numero de veces a jugar");
+      on++;
+     break;
+
+     case 1:
+      Serial.println("Inicio de Juego");
+      on++;
+     break;
+
+     case 2:
+       Timer1.detachInterrupt();
+      Serial.println("Fin de Juego");
+      
+      cont=0;
+      on=0;
+      i=0;
+     break;
+     default:
+     on=0;
+  }
+}
+
+void contador(){
+  if(on==1){
+    cont++;
+    Serial.println(String("Juega ")+String(cont)+String(" veces"));
+  }
+}
