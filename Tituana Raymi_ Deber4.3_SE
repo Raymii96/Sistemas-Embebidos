@@ -1,0 +1,50 @@
+#include <MsTimer2.h>        //Librera Timer 2
+#include <LiquidCrystal.h>   //Libreria LCD
+
+ LiquidCrystal lcd(13,12,11,10,9,8);  //Objeto para la librera de LCD 
+
+ int seg=0;      
+ int mi=0;       
+ int hrs=0;          
+ 
+void setup() {
+  lcd.begin(20,4);            
+  MsTimer2::set(1000,reloj);  
+  MsTimer2::start();  
+}
+
+void loop() {
+
+}
+
+void reloj(){
+  if(seg<60){            //Condicion de segundos 
+    seg++;               //Incremetar variable
+  }
+  else{
+    seg=0;              
+    if(mi<60){           //Condicion de minutos
+      mi++;              //Incrementa variable
+    }
+    else{
+      mi=0;
+      if(hrs<24){           //Condicion de horas
+        hrs++;              //Incrementa variable
+      }
+      else{
+        hrs=0;
+      }
+    }
+  }
+  lcd.clear();     
+  lcd.setCursor(0,0);
+  lcd.print("HOLA, BIENVENIDO A TU RELOJ"); 
+  lcd.setCursor(0,1);
+  lcd.print("RAYMI TITUANA");
+  lcd.setCursor(0,2);
+  lcd.print(String("HORAS ")+String("MINUTOS ")+String("SEGUNDOS "));          
+  lcd.setCursor(0,3);         
+  lcd.print(String(hrs)+String(":")+String(mi)+String(":")+String(seg));  
+
+
+}
