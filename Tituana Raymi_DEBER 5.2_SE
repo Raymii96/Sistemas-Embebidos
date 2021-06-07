@@ -1,0 +1,69 @@
+/*
+ * Raymi Tituaña
+ * CAPITULO V: FUNCIONES ESPECIFICAS
+ * CODIGO 23: Manejo de modos Sleep
+ * Objetivo: Realizar un control de modos sleep por medio de interrupciones
+ * MODO SLEEP Y AHORRO DE BATERIA
+ *  Consumo es de 100-500mA
+ *  Ahorro de bateria es hasta de 10mA
+ * Librerias:
+ *        avr/sleep.h
+ *        avr/power.h
+ * DEBER 5.2
+ */
+
+#include <avr/power.h>
+#include <avr/sleep.h>
+#include <avr/wdt.h>
+#include <MsTimer2.h>
+#include <EEPROM.h>
+
+int dato;
+int on=0;
+
+void(*resetFunc)(void)=0; //es la funcion de reseteo //void on (void)
+void setup() {
+  dato=EEPROM.read(0);
+  Serial.begin(9600);
+  Serial.println("SETUP");
+  if(dato==0){
+      set_sleep_mode(SLEEP_MODE_STANDBY);
+      sleep_enable();
+      EEPROM.write(0,1);
+      wdt_enable(WDTO_8S);
+  }
+  else{
+    sleep_disable();
+      EEPROM.write(0,0);
+      MsTimer2::set(10000,tiempo); // config de timer2 a 1 seg
+      MsTimer2::start();
+        
+    }
+  attachInterrupt(0,encender,LOW);
+ }
+
+void loop() {
+  if(dato==0){
+    
+     sleep_mode();//entra al estado dormido
+    Serial.println("MIMIDO");
+    delay(2000);
+   
+    }
+  else{
+    Serial.println("FUNCIONANDO");
+    delay(1000);
+    }
+}
+
+void tiempo(){
+  Serial.println("MIMIDO");
+  delay(2000);
+  sleep_mode();//entra al estado dormido 
+  }
+
+void encender(){
+  resetFunc();
+  }
+
+  
